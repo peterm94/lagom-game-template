@@ -198,7 +198,7 @@ class Ball extends Entity
                              }));
 
         collider.onTriggerEnter.register(() => {
-            const movement = this.getComponent<BallMovement>(BallMovement)
+            const movement = this.getComponent<BallMovement>(BallMovement);
             if (movement !== null)
             {
                 movement.xSpeed *= -1;
