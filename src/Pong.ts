@@ -116,11 +116,11 @@ class PlayerMover extends System<[PlayerControlled]>
         this.runOnEntities((entity: Entity,
                             playerControlled: PlayerControlled) => {
 
-            if (Game.keyboard.isKeyDown(playerControlled.upKey) && entity.transform.position.y > 0)
+            if (this.scene.game.keyboard.isKeyDown(playerControlled.upKey) && entity.transform.position.y > 0)
             {
                 entity.transform.position.y += this.moveSpeed * -1 * (delta / 100);
             }
-            if (Game.keyboard.isKeyDown(playerControlled.downKey)
+            if (this.scene.game.keyboard.isKeyDown(playerControlled.downKey)
                 && entity.transform.position.y + entity.transform.height < entity.getScene().getGame().renderer.height)
             {
                 entity.transform.position.y += this.moveSpeed * (delta / 100);
