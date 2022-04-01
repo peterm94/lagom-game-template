@@ -90,10 +90,10 @@ class Paddle extends Entity
 
         this.addComponent(
             new RectCollider(<CollisionSystem>this.getScene().getGlobalSystem<CollisionSystem>(CollisionSystem),
-                             {
-                                 layer: Layers.leftpaddle,
-                                 height: Paddle.height, width: Paddle.width
-                             }));
+                {
+                    layer: Layers.leftpaddle,
+                    height: Paddle.height, width: Paddle.width
+                }));
     }
 }
 
@@ -105,9 +105,9 @@ class PlayerControlled extends Component
     }
 }
 
-class PlayerMover extends System
+class PlayerMover extends System<[PlayerControlled]>
 {
-    private readonly moveSpeed = 4;
+    private readonly moveSpeed = 40;
 
     types = () => [PlayerControlled];
 
@@ -118,12 +118,12 @@ class PlayerMover extends System
 
             if (Game.keyboard.isKeyDown(playerControlled.upKey) && entity.transform.position.y > 0)
             {
-                entity.transform.position.y += this.moveSpeed * -1;
+                entity.transform.position.y += this.moveSpeed * -1 * (delta / 100);
             }
             if (Game.keyboard.isKeyDown(playerControlled.downKey)
                 && entity.transform.position.y + entity.transform.height < entity.getScene().getGame().renderer.height)
             {
-                entity.transform.position.y += this.moveSpeed;
+                entity.transform.position.y += this.moveSpeed * (delta / 100);
             }
         });
     }
@@ -138,13 +138,13 @@ class BallMovement extends Component
     constructor()
     {
         super();
-        this.xSpeed = -3;
-        this.ySpeed = 3;
+        this.xSpeed = -30;
+        this.ySpeed = 30;
     }
 }
 
 
-class BallMover extends System
+class BallMover extends System<[BallMovement]>
 {
     topBounce: number;
     bottomBounce: number;
@@ -158,15 +158,14 @@ class BallMover extends System
 
     update(delta: number): void
     {
-        this.runOnEntities((entity: Entity,
-                            ball: BallMovement) => {
+        this.runOnEntities((entity: Entity, ball: BallMovement) => {
             const bodyY = entity.transform.y;
             if (bodyY > this.bottomBounce || bodyY < this.topBounce)
             {
                 ball.ySpeed *= -1;
             }
-            entity.transform.x += ball.xSpeed;
-            entity.transform.y += ball.ySpeed;
+            entity.transform.x += ball.xSpeed * (delta / 100);
+            entity.transform.y += ball.ySpeed * (delta / 100);
         });
     }
 
@@ -193,10 +192,10 @@ class Ball extends Entity
 
         const collider = this.addComponent(
             new RectCollider(<CollisionSystem>this.getScene().getGlobalSystem<CollisionSystem>(CollisionSystem),
-                             {
-                                 xOff: 0, yOff: 0, layer: Layers.ball, rotation: 0,
-                                 height: 10, width: 10
-                             }));
+                {
+                    xOff: 0, yOff: 0, layer: Layers.ball, rotation: 0,
+                    height: 10, width: 10
+                }));
 
         collider.onTriggerEnter.register(() => {
             const movement = this.getComponent<BallMovement>(BallMovement);
@@ -282,7 +281,7 @@ class Score extends Component
     }
 }
 
-class ScoreSystem extends System
+class ScoreSystem extends System<[BallMovement]>
 {
     constructor(private score: Score)
     {
