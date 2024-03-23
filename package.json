@@ -9,10 +9,12 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "lagom-engine": "1.0.0"
+    "lagom-engine": "1.0.0",
+    "webfontloader": "^1.6.28"
   },
   "devDependencies": {
     "typescript": "^5.0.2",
-    "vite": "^4.4.5"
+    "vite": "^5.2.3",
+    "@types/webfontloader": "^1.6.34"
   }
 }
