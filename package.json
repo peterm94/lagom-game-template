@@ -6,15 +6,16 @@
   "scripts": {
     "dev": "vite",
     "build": "tsc && vite build",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "deploy": "tsc && vite build && butler push dist USERNAME/GAMENAME:html5"
   },
   "dependencies": {
-    "lagom-engine": "1.0.0",
+    "lagom-engine": "^1.1.0",
     "webfontloader": "^1.6.28"
   },
   "devDependencies": {
+    "@types/webfontloader": "^1.6.34",
     "typescript": "^5.0.2",
-    "vite": "^5.2.3",
-    "@types/webfontloader": "^1.6.34"
+    "vite": "^5.2.3"
   }
 }
