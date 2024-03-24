@@ -19,5 +19,4 @@ export class ActionOnPress extends System<[]> {
 }
 
 // TODO make a title screen using this
-// TODO font loading
 // TODO snippet on how to show debug detect

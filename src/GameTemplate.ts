@@ -45,10 +45,10 @@ export class GameTemplate extends Game
         //     .loop(true)
         //     .volume(0.3);
 
-        // Import fonts
+        // Import fonts. See index.html for examples of how to add new ones.
         WebFont.load({
             custom: {
-                families: ["myPixelFont", "myPixelFont2"]
+                families: ["pixeloid", "retro"]
             }
         });
 
