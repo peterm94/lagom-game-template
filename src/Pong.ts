@@ -7,7 +7,6 @@ import {
     Entity,
     Game,
     Key,
-    LagomType,
     Observable,
     RectCollider,
     RenderRect,
@@ -80,8 +79,7 @@ class Paddle extends Entity
         if (this.side === PaddleSide.left)
         {
             this.addComponent(new PlayerControlled(Key.KeyW, Key.KeyS));
-        }
-        else
+        } else
         {
             this.addComponent(new PlayerControlled(Key.ArrowUp, Key.ArrowDown));
         }
@@ -89,7 +87,7 @@ class Paddle extends Entity
         this.addComponent(new RenderRect(0, 0, Paddle.width, Paddle.height, 0xffffff, 0xffffff));
 
         this.addComponent(
-            new RectCollider(<CollisionSystem>this.getScene().getGlobalSystem<CollisionSystem>(CollisionSystem),
+            new RectCollider(<CollisionSystem<any>>this.getScene().getGlobalSystem<CollisionSystem<any>>(CollisionSystem),
                 {
                     layer: Layers.leftpaddle,
                     height: Paddle.height, width: Paddle.width
@@ -109,7 +107,7 @@ class PlayerMover extends System<[PlayerControlled]>
 {
     private readonly moveSpeed = 40;
 
-    types = () => [PlayerControlled];
+    types = [PlayerControlled];
 
     update(delta: number): void
     {
@@ -169,10 +167,7 @@ class BallMover extends System<[BallMovement]>
         });
     }
 
-    types(): LagomType<Component>[]
-    {
-        return [BallMovement];
-    }
+    types = [BallMovement];
 }
 
 class Ball extends Entity
@@ -191,7 +186,7 @@ class Ball extends Entity
         this.addComponent(new BallMovement());
 
         const collider = this.addComponent(
-            new RectCollider(<CollisionSystem>this.getScene().getGlobalSystem<CollisionSystem>(CollisionSystem),
+            new RectCollider(<CollisionSystem<any>>this.getScene().getGlobalSystem<CollisionSystem<any>>(CollisionSystem),
                 {
                     xOff: 0, yOff: 0, layer: Layers.ball, rotation: 0,
                     height: 10, width: 10
@@ -288,8 +283,6 @@ class ScoreSystem extends System<[BallMovement]>
         super();
     }
 
-    types = () => [BallMovement];
-
     update(delta: number): void
     {
         this.runOnEntities((entity: Entity) => {
@@ -307,4 +300,6 @@ class ScoreSystem extends System<[BallMovement]>
             }
         });
     }
+
+    types = [BallMovement];
 }

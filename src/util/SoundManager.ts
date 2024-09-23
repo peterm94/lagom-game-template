@@ -6,7 +6,7 @@ class MuteComp extends Component {
 }
 
 class MuteListener extends System<[AnimatedSpriteController, MuteComp]> {
-    types = () => [AnimatedSpriteController, MuteComp];
+    types = [AnimatedSpriteController, MuteComp];
 
     update(delta: number): void {
         this.runOnEntities((e: Entity, spr: AnimatedSpriteController) => {
