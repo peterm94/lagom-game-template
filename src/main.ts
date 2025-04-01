@@ -1,6 +1,6 @@
-import {GameTemplate} from "./GameTemplate.ts";
 import "./main.css";
-import {Pong} from "./Pong.ts";
+import {Pong} from "./Pong";
+// import {GameTemplate} from "./GameTemplate";
 
 document.querySelector<HTMLDivElement>('#app')!.innerHTML = `
   <div id="main" style="align-items: center; justify-content: center; height: 100%; display: flex">

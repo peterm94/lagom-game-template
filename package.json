@@ -1,13 +1,10 @@
 {
   "name": "lagom-game-template",
   "version": "0.1.0",
-  "type": "module",
   "private": true,
   "scripts": {
-    "dev": "vite",
-    "build": "tsc && vite build",
-    "preview": "vite preview",
-    "deploy": "tsc && vite build && butler push dist USERNAME/GAMENAME:html5"
+    "dev": "webpack serve --open",
+    "build": "webpack"
   },
   "dependencies": {
     "lagom-engine": "^1.2.1",
@@ -16,6 +13,14 @@
   "devDependencies": {
     "@types/webfontloader": "^1.6.34",
     "typescript": "^5.6.2",
-    "vite": "^5.4.7"
+    "webpack": "^5.98.0",
+    "webpack-dev-server": "^5.2.1",
+    "webpack-cli": "^6.0.1",
+    "ts-loader": "^9.5.2",
+    "file-loader": "^6.2.0",
+    "css-loader": "^7.1.2",
+    "style-loader": "^4.0.0",
+    "html-webpack-plugin": "^5.6.3",
+    "copy-webpack-plugin": "^13.0.0"
   }
 }
