@@ -1,7 +1,7 @@
 import {ActionOnPress, AudioAtlas, Entity, FrameTriggerSystem, Game, Log, LogLevel, Scene, SpriteSheet, TextDisp, TimerSystem} from 'lagom-engine';
 import WebFont from 'webfontloader';
 import muteButtonSpr from "./art/mute_button.png";
-import {SoundManager} from "./util/SoundManager.ts";
+import {SoundManager} from "./util/SoundManager";
 
 class TitleScene extends Scene {
     onAdded() {
@@ -65,14 +65,19 @@ export class GameTemplate extends Game
         //     .volume(0.3);
 
         // Import fonts. See index.html for examples of how to add new ones.
-        WebFont.load({
-            custom: {
-                families: ["pixeloid", "retro"]
-            }
+        const fonts = new Promise<void>((resolve, _) => {
+            WebFont.load({
+                custom: {
+                    families: ["pixeloid", "retro"]
+                },
+                active() {
+                    resolve();
+                }
+            });
         });
 
         // Wait for all resources to be loaded and then start the main scene.
-        this.resourceLoader.loadAll().then(
+        Promise.all([fonts, this.resourceLoader.loadAll()]).then(
             () => {
                 this.setScene(new TitleScene(this));
             }
