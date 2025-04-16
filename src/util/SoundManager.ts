@@ -1,6 +1,6 @@
 import {AnimatedSpriteController, Button, Component, Entity, Key, System, Timer} from "lagom-engine";
 
-import {GameTemplate} from "../GameTemplate.ts";
+import {GameTemplate} from "../GameTemplate";
 
 class MuteComp extends Component {
 }
