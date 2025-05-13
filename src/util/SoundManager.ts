@@ -1,4 +1,4 @@
-import {AnimatedSpriteController, Button, Component, Entity, Key, System, Timer} from "lagom-engine";
+import {AnimatedSpriteController, Button, Component, CType, Entity, Key, System, Timer} from "lagom-engine";
 
 import {GameTemplate} from "../GameTemplate";
 
@@ -6,22 +6,20 @@ class MuteComp extends Component {
 }
 
 class MuteListener extends System<[AnimatedSpriteController, MuteComp]> {
-    types = [AnimatedSpriteController, MuteComp];
+    types: [CType<AnimatedSpriteController>, CType<MuteComp>] = [AnimatedSpriteController, MuteComp];
 
-    update(delta: number): void {
-        this.runOnEntities((e: Entity, spr: AnimatedSpriteController) => {
-            if (this.scene.game.mouse.isButtonPressed(Button.LEFT)) {
-                const pos = e.scene.game.renderer.plugins.interaction.mouse.global;
+    runOnEntities(delta: number, e: Entity, spr: AnimatedSpriteController, args_1: MuteComp): void {
+        if (this.scene.game.mouse.isButtonPressed(Button.LEFT)) {
+            const pos = e.scene.game.renderer.plugins.interaction.mouse.global;
 
-                if (pos.x >= GameTemplate.GAME_WIDTH - 24 && pos.x <= GameTemplate.GAME_WIDTH - 8 && pos.y >= GameTemplate.GAME_HEIGHT - 24 && pos.y <= GameTemplate.GAME_HEIGHT - 8) {
-                    (e.scene.getEntityWithName("audio") as SoundManager).toggleMute();
-                    spr.setAnimation(Number(GameTemplate.muted));
-                }
-            } else if (this.scene.game.keyboard.isKeyPressed(Key.KeyM)) {
+            if (pos.x >= GameTemplate.GAME_WIDTH - 24 && pos.x <= GameTemplate.GAME_WIDTH - 8 && pos.y >= GameTemplate.GAME_HEIGHT - 24 && pos.y <= GameTemplate.GAME_HEIGHT - 8) {
                 (e.scene.getEntityWithName("audio") as SoundManager).toggleMute();
                 spr.setAnimation(Number(GameTemplate.muted));
             }
-        });
+        } else if (this.scene.game.keyboard.isKeyPressed(Key.KeyM)) {
+            (e.scene.getEntityWithName("audio") as SoundManager).toggleMute();
+            spr.setAnimation(Number(GameTemplate.muted));
+        }
     }
 }
 
