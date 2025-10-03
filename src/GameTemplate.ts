@@ -1,4 +1,16 @@
-import {ActionOnPress, AudioAtlas, Entity, FrameTriggerSystem, Game, Log, LogLevel, Scene, SpriteSheet, TextDisp, TimerSystem} from 'lagom-engine';
+import {
+    ActionOnPress,
+    AudioAtlas,
+    Entity,
+    FrameTriggerSystem,
+    Game,
+    Log,
+    LogLevel,
+    Scene,
+    SpriteSheet,
+    TextDisp,
+    TimerSystem
+} from 'lagom-engine';
 import WebFont from 'webfontloader';
 import muteButtonSpr from "./art/mute_button.png";
 import {SoundManager} from "./util/SoundManager";
@@ -11,7 +23,10 @@ class TitleScene extends Scene {
         this.addGlobalSystem(new TimerSystem());
         this.addGlobalSystem(new FrameTriggerSystem());
 
-        this.addGUIEntity(new Entity("title")).addComponent(new TextDisp(100, 10, "GAME NAME", {fontFamily: "retro", fill: 0xffffff}));
+        this.addGUIEntity(new Entity("title")).addComponent(new TextDisp(100, 10, "GAME NAME", {
+            fontFamily: "retro",
+            fill: 0xffffff
+        }));
 
         this.addSystem(new ActionOnPress(() => {
             this.game.setScene(new MainScene(this.game))
@@ -19,8 +34,7 @@ class TitleScene extends Scene {
     }
 }
 
-class MainScene extends Scene
-{
+class MainScene extends Scene {
     onAdded() {
         super.onAdded();
 
@@ -28,13 +42,15 @@ class MainScene extends Scene
         this.addGlobalSystem(new TimerSystem());
         this.addGlobalSystem(new FrameTriggerSystem());
 
-        this.addGUIEntity(new Entity("main scene")).addComponent(new TextDisp(100, 10, "MAIN SCENE", {fontFamily: "pixeloid", fill: 0xffffff}));
+        this.addGUIEntity(new Entity("main scene")).addComponent(new TextDisp(100, 10, "MAIN SCENE", {
+            fontFamily: "pixeloid",
+            fill: 0xffffff
+        }));
 
     }
 }
 
-export class GameTemplate extends Game
-{
+export class GameTemplate extends Game {
     static GAME_WIDTH = 512;
     static GAME_HEIGHT = 512;
 
@@ -42,8 +58,7 @@ export class GameTemplate extends Game
     static musicPlaying = false;
     static audioAtlas: AudioAtlas = new AudioAtlas();
 
-    constructor()
-    {
+    constructor() {
         super({
             width: GameTemplate.GAME_WIDTH,
             height: GameTemplate.GAME_HEIGHT,

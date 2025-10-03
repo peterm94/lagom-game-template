@@ -2,6 +2,7 @@ import {
     CollisionMatrix,
     CollisionSystem,
     Component,
+    CType,
     Diagnostics,
     DiscreteCollisionSystem,
     Entity,
@@ -15,32 +16,26 @@ import {
     TextDisp
 } from "lagom-engine";
 
-enum Layers
-{
+enum Layers {
     leftpaddle,
     ball,
     rightpaddle
 }
 
-enum PaddleSide
-{
+enum PaddleSide {
     left,
     right
 }
 
-export class Pong extends Game
-{
-    constructor()
-    {
+export class Pong extends Game {
+    constructor() {
         super({width: 800, height: 600, resolution: 1, backgroundColor: 0x000000});
         this.setScene(new MainScene(this));
     }
 }
 
-class MainScene extends Scene
-{
-    onAdded()
-    {
+class MainScene extends Scene {
+    onAdded() {
         super.onAdded();
 
         const collisionMatrix = new CollisionMatrix();
@@ -62,25 +57,20 @@ class MainScene extends Scene
     }
 }
 
-class Paddle extends Entity
-{
+class Paddle extends Entity {
     private static width = 30;
     private static height = 80;
 
-    constructor(x: number, y: number, private side: PaddleSide)
-    {
+    constructor(x: number, y: number, private side: PaddleSide) {
         super("paddle", x, y);
     }
 
-    onAdded()
-    {
+    onAdded() {
         super.onAdded();
 
-        if (this.side === PaddleSide.left)
-        {
+        if (this.side === PaddleSide.left) {
             this.addComponent(new PlayerControlled(Key.KeyW, Key.KeyS));
-        } else
-        {
+        } else {
             this.addComponent(new PlayerControlled(Key.ArrowUp, Key.ArrowDown));
         }
 
@@ -95,46 +85,35 @@ class Paddle extends Entity
     }
 }
 
-class PlayerControlled extends Component
-{
-    constructor(public upKey: Key, public downKey: Key)
-    {
+class PlayerControlled extends Component {
+    constructor(public upKey: Key, public downKey: Key) {
         super();
     }
 }
 
-class PlayerMover extends System<[PlayerControlled]>
-{
+class PlayerMover extends System<[PlayerControlled]> {
+    types: [CType<PlayerControlled>] = [PlayerControlled];
+
     private readonly moveSpeed = 40;
 
-    types = [PlayerControlled];
+    runOnEntities(delta: number, entity: Entity, playerControlled: PlayerControlled): void {
 
-    update(delta: number): void
-    {
-        this.runOnEntities((entity: Entity,
-                            playerControlled: PlayerControlled) => {
-
-            if (this.scene.game.keyboard.isKeyDown(playerControlled.upKey) && entity.transform.position.y > 0)
-            {
-                entity.transform.position.y += this.moveSpeed * -1 * (delta / 100);
-            }
-            if (this.scene.game.keyboard.isKeyDown(playerControlled.downKey)
-                && entity.transform.position.y + entity.transform.height < entity.getScene().getGame().renderer.height)
-            {
-                entity.transform.position.y += this.moveSpeed * (delta / 100);
-            }
-        });
+        if (this.scene.game.keyboard.isKeyDown(playerControlled.upKey) && entity.transform.position.y > 0) {
+            entity.transform.position.y += this.moveSpeed * -1 * (delta / 100);
+        }
+        if (this.scene.game.keyboard.isKeyDown(playerControlled.downKey)
+            && entity.transform.position.y + entity.transform.height < entity.getScene().getGame().renderer.height) {
+            entity.transform.position.y += this.moveSpeed * (delta / 100);
+        }
     }
 }
 
 
-class BallMovement extends Component
-{
+class BallMovement extends Component {
     xSpeed: number;
     ySpeed: number;
 
-    constructor()
-    {
+    constructor() {
         super();
         this.xSpeed = -30;
         this.ySpeed = 30;
@@ -142,43 +121,35 @@ class BallMovement extends Component
 }
 
 
-class BallMover extends System<[BallMovement]>
-{
+class BallMover extends System<[BallMovement]> {
+    types: [CType<BallMovement>] = [BallMovement];
+
     topBounce: number;
     bottomBounce: number;
 
-    constructor()
-    {
+    constructor() {
         super();
         this.topBounce = 10;
         this.bottomBounce = 600 - 10;
     }
 
-    update(delta: number): void
-    {
-        this.runOnEntities((entity: Entity, ball: BallMovement) => {
-            const bodyY = entity.transform.y;
-            if (bodyY > this.bottomBounce || bodyY < this.topBounce)
-            {
-                ball.ySpeed *= -1;
-            }
-            entity.transform.x += ball.xSpeed * (delta / 100);
-            entity.transform.y += ball.ySpeed * (delta / 100);
-        });
-    }
+    runOnEntities(delta: number, entity: Entity, ball: BallMovement): void {
 
-    types = [BallMovement];
+        const bodyY = entity.transform.y;
+        if (bodyY > this.bottomBounce || bodyY < this.topBounce) {
+            ball.ySpeed *= -1;
+        }
+        entity.transform.x += ball.xSpeed * (delta / 100);
+        entity.transform.y += ball.ySpeed * (delta / 100);
+    }
 }
 
-class Ball extends Entity
-{
-    constructor(x: number, y: number)
-    {
+class Ball extends Entity {
+    constructor(x: number, y: number) {
         super("ball", x, y);
     }
 
-    onAdded(): void
-    {
+    onAdded(): void {
         super.onAdded();
 
         const rect = new RenderRect(0, 0, 10, 10, 0xffffff, 0xffffff);
@@ -194,26 +165,22 @@ class Ball extends Entity
 
         collider.onTriggerEnter.register(() => {
             const movement = this.getComponent<BallMovement>(BallMovement);
-            if (movement !== null)
-            {
+            if (movement !== null) {
                 movement.xSpeed *= -1;
             }
         });
     }
 }
 
-class Scoreboard extends Entity
-{
+class Scoreboard extends Entity {
     score: Score;
 
-    constructor(x: number, y: number)
-    {
+    constructor(x: number, y: number) {
         super("scoreboard", x, y);
         this.score = new Score();
     }
 
-    onAdded()
-    {
+    onAdded() {
         super.onAdded();
 
         const p1Label = new TextDisp(-30, 0, this.score.player1Score.toString(), {fill: 0x777777});
@@ -230,45 +197,38 @@ class Scoreboard extends Entity
     }
 }
 
-class Score extends Component
-{
+class Score extends Component {
     private _player1Score: number;
     private _player2Score: number;
 
-    constructor()
-    {
+    constructor() {
         super();
         this._player1Score = 0;
         this._player2Score = 0;
     }
 
-    player1Scored(): void
-    {
+    player1Scored(): void {
         this._player1Score++;
         this.onP1Score.trigger(this, this._player1Score);
     }
 
-    get player1Score(): number
-    {
+    get player1Score(): number {
         return this._player1Score;
     }
 
-    player2Scored(): void
-    {
+    player2Scored(): void {
         this._player2Score++;
         this.onP2Score.trigger(this, this._player2Score);
     }
 
-    get player2Score(): number
-    {
+    get player2Score(): number {
         return this._player2Score;
     }
 
     readonly onP1Score: Observable<Score, number> = new Observable();
     readonly onP2Score: Observable<Score, number> = new Observable();
 
-    onRemoved(): void
-    {
+    onRemoved(): void {
         super.onRemoved();
 
         this.onP1Score.releaseAll();
@@ -276,30 +236,23 @@ class Score extends Component
     }
 }
 
-class ScoreSystem extends System<[BallMovement]>
-{
-    constructor(private score: Score)
-    {
+class ScoreSystem extends System<[BallMovement]> {
+    types: [CType<BallMovement>] = [BallMovement];
+
+    constructor(private score: Score) {
         super();
     }
 
-    update(delta: number): void
-    {
-        this.runOnEntities((entity: Entity) => {
-            if (entity.transform.x < 0)
-            {
-                this.score.player2Scored();
-                entity.destroy();
-                this.getScene().addEntity(new Ball(400, 200));
-            }
-            if (entity.transform.x > 800)
-            {
-                this.score.player1Scored();
-                entity.destroy();
-                this.getScene().addEntity(new Ball(400, 200));
-            }
-        });
+    runOnEntities(delta: number, entity: Entity, args_0: BallMovement): void {
+        if (entity.transform.x < 0) {
+            this.score.player2Scored();
+            entity.destroy();
+            this.getScene().addEntity(new Ball(400, 200));
+        }
+        if (entity.transform.x > 800) {
+            this.score.player1Scored();
+            entity.destroy();
+            this.getScene().addEntity(new Ball(400, 200));
+        }
     }
-
-    types = [BallMovement];
 }
